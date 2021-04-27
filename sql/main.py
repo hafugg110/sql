@@ -13,6 +13,8 @@ def new_student():
 
 @app.route('/addrec', methods=['POST','GET'])
 def addrec():
+    con = sql.connect("database.db")
+    msg = "新增失敗"
     if request.method == 'POST':
         try:
             nm = request.form['nm']
@@ -20,20 +22,21 @@ def addrec():
             city = request.form['city']
             pin = request.form['pin']
 
-            with sql.connect("database.db") as con:
-                cur = con.cursor()
-                cur.execute(
-                    "INSERT INTO students(name, addr, city, pin) VALUES(?, ?, ?, ?)"
-                    , (nm, addr, city, pin))
-                con.commit()
-                msg = "新增成功"
-        except:
-            con.rollback()
-            msg = "新增失敗"
+            cur = con.cursor()
+            cur.execute(
+                "INSERT INTO students(name, addr, city, pin) VALUES(?, ?, ?, ?)", (nm, addr, city, pin)
+                )
 
-        finally:
-            return render_template("result.html", msg=msg)
-            con.colse()
+            con.commit()
+            msg = "新增成功"
+
+        except Exception as e:
+            con.rollback()
+            print(e)
+
+        con.close()
+        return render_template("result.html", msg=msg)
+            
 
 @app.route('/list')
 def list():
@@ -44,4 +47,4 @@ def list():
     cur.execute("select * from students")
 
     rows = cur.fetchall()
-    return render_template("list.html", row=rows)
+    return render_template("list.html", rows=rows)

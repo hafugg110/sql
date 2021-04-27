@@ -5,10 +5,10 @@ print("Opened database successfully")
 conn.execute(
     """
     CREATE TABLE students (
-        name TEXT,
+        name TEXT NOT NULL,
         addr TEXT,
         city TEXT,
-        pin TEXT)
+        pin TEXT NOT NULL)
     """
     )
 print("Table created successfully")
