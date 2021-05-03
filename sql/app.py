@@ -1,5 +1,7 @@
 from flask import Flask, render_template, url_for, request
 import sqlite3 as sql
+import numpy
+# import db # 因下方訊息:no such table: students 要嘛導入db的student,要嘛把student寫進來
 app = Flask(__name__)
 
 
@@ -21,15 +23,15 @@ def addrec():
             addr = request.form['add']
             city = request.form['city']
             pin = request.form['pin']
-
             cur = con.cursor()
             cur.execute(
                 "INSERT INTO students(name, addr, city, pin) VALUES(?, ?, ?, ?)", (nm, addr, city, pin)
                 )
-
+            
+            print(request.method, msg)
             con.commit()
             msg = "新增成功"
-
+            
         except Exception as e:
             con.rollback()
             print(e)
