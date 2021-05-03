@@ -12,4 +12,4 @@ conn.execute(
     """
     )
 print("Table created successfully")
-conn.colne()
+conn.colne() 
